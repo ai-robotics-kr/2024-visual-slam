@@ -127,3 +127,6 @@ RUN git clone https://github.com/RainerKuemmerle/g2o.git && \
     make -j$(nproc) && \
     make install
 
+# GLUT
+RUN apt-get update && apt-get install -y freeglut3-dev
+
