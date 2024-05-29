@@ -119,4 +119,11 @@ RUN wget https://github.com/nigels-com/glew/releases/download/glew-2.1.0/glew-2.
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-WORKDIR /root/visual_slam_ws/
+# G2O
+RUN git clone https://github.com/RainerKuemmerle/g2o.git && \
+    cd g2o && \
+    mkdir build && cd build && \
+    cmake .. && \
+    make -j$(nproc) && \
+    make install
+
