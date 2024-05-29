@@ -23,7 +23,12 @@ cd visual_slam
 docker build -t slam .
 ```
 
-### How to Usage
+### Docker run
+```bash
+docker run -it -d --name=slam --privileged --network=host -v /tmp/.X11-unix:/tmp/.X11-unix:rw -e DISPLAY=$DISPLAY --shm-size=8G --ipc=host -v /dev/shm:/dev/shm slam
+```
+
+### How to Usage in local
 ```bash
 git clone https://github.com/ai-robotics-kr/2024-visual-slam.git
 cd visual_slam
