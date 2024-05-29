@@ -91,6 +91,7 @@ RUN apt-get install -y mesa-utils && \
 RUN wget https://github.com/stevenlovegrove/Pangolin/archive/refs/tags/v0.6.zip &&\
     unzip v0.6.zip &&\
     cd Pangolin-0.6 &&\
+    sed -i '1i#include <stdexcept>\n#include <limits>' /Pangolin-0.6/include/pangolin/gl/colour.h &&\
     mkdir build && cd build &&\
     cmake .. &&\
     make -j4 &&\
