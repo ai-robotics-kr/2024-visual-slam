@@ -130,3 +130,13 @@ RUN git clone https://github.com/RainerKuemmerle/g2o.git && \
 # GLUT
 RUN apt-get update && apt-get install -y freeglut3-dev
 
+# visual odometry
+RUN git clone https://github.com/ai-robotics-kr/2024-visual-slam.git && \ 
+    cd 2024-visual-slam && \
+    mkdir build && cd build && \
+    cmake .. && \
+    make -j4
+
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* && ldconfig
+
+WORKDIR /2024-visual_slam/
