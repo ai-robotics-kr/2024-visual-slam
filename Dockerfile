@@ -139,4 +139,4 @@ RUN git clone https://github.com/ai-robotics-kr/2024-visual-slam.git && \
 
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* && ldconfig
 
-WORKDIR /2024-visual_slam/
+WORKDIR /2024-visual-slam/
