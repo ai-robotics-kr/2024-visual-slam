@@ -4,6 +4,9 @@
 dataset_dir: /path/to/dataset/Kitti/sequences/05
 
 image_topic: /image_raw/compressed
+depth_topic: /image_raw/depth
+
+use_camera: 1
 
 # camera intrinsics
 camera.fx: 517.3
@@ -21,3 +24,23 @@ display_fx : 400
 display_fy : 400
 display_cx : 512
 display_cy : 384
+
+# left camera intrinsics
+left_fx: 517.3
+left_fy: 516.5
+left_cx: 325.1
+left_cy: 249.7
+left_baseline: 0
+left_x: 0
+left_y: 0
+left_z: 0
+
+# right camera intrinsics
+right_fx: 517.3
+right_fy: 516.5
+right_cx: 325.1
+right_cy: 249.7
+right_baseline: 0 
+right_x: 0
+right_y: 0
+right_z: 0

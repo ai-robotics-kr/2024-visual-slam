@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.8)
-set(PACKAGE_NAME VIO)
+set(PACKAGE_NAME vio)
 set(PACKAGE_VERSION 1.0.0)
 set(CMAKE_BUILD_TYPE Release)
 
@@ -14,25 +14,12 @@ set(CMAKE_CXX_FLAGS "-std=c++17 -Wall")
 set(CMAKE_CXX_FLAGS_RELEASE "-std=c++17 -O3 -fopenmp -pthread")
 
 list(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/../../../cmake_modules)
-set(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../../../bin)
-set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/../../../lib)
-
-set(CPACK_PROJECT_NAME ${PROJECT_NAME})
-set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
-
-set(${PACKAGE_NAME}_PATH ${CMAKE_CURRENT_SOURCE_DIR})
-set(${PACKAGE_NAME}_SOURCE_PATH "${${PACKAGE_NAME}_PATH}/src")
-set(${PACKAGE_NAME}_INCLUDE_PATH "${${PACKAGE_NAME}_PATH}/include")
-
-message(STATUS "PACKAGE_NAME: ${PACKAGE_NAME}")
-message(STATUS "PACKAGE_NAME: ${PACKAGE_VERSION}")
-message(STATUS "${PACKAGE_NAME}_PATH: ${${PACKAGE_NAME}_PATH}")
-message(STATUS "${PACKAGE_NAME}_SOURCE_PATH: ${${PACKAGE_NAME}_SOURCE_PATH}")
-message(STATUS "${PACKAGE_NAME}_INCLUDE_PATH: ${${PACKAGE_NAME}_INCLUDE_PATH}")
 
 # OpenCV
 find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
+
+link_directories(${OpenCV_LIB_DIR})
 
 # Eigen3
 include_directories("/usr/include/eigen3")
@@ -71,9 +58,24 @@ find_package(fmt REQUIRED)
 
 # find dependencies
 find_package(ament_cmake REQUIRED)
-find_package(rclpy REQUIRED)
 find_package(rclcpp REQUIRED)
 find_package(sensor_msgs REQUIRED)
+find_package(message_filters REQUIRED)
+find_package(cv_bridge REQUIRED)
+
+# libslam.so 파일이 있는 디렉토리 경로를 설정합니다.
+set(LIBSLAMSO /2024-visual-slam/lib/)
+
+# libslam.so 파일을 찾습니다.
+find_library(SLAM_LIBRARY
+    NAMES libslam.so
+    PATHS ${LIBSLAMSO}
+)
+
+# libslam.so 파일을 찾았는지 확인합니다.
+if(NOT SLAM_LIBRARY)
+    message(FATAL_ERROR "libslam.so not found")
+endif()
 
 set(THIRD_PARTY_LIBS
     ${OpenCV_LIBS}
@@ -86,15 +88,25 @@ set(THIRD_PARTY_LIBS
     pthread
     ${CSPARSE_LIBRARY}
     fmt::fmt 
-    ${PROJECT_SOURCE_DIR}/../../../lib/libslam.so
+    ${SLAM_LIBRARY}
 )
 
-# if you have test
-# set(${PACKAGE_NAME}_TEST_PATH "${${PACKAGE_NAME}_PATH}/test")
-# add_subdirectory(${${PACKAGE_NAME}_TEST_PATH})
-# enable_testing()
-
 include_directories(${PROJECT_SOURCE_DIR}/../../../include)
+include_directories(include)
+
+# Set RPATH
+set(CMAKE_INSTALL_RPATH "${LIBSLAMSO}")
+set(CMAKE_BUILD_WITH_INSTALL_RPATH TRUE)
+set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
+
+add_executable(vio_ros2 src/run_ros2.cpp src/rgbd_vio_node.cpp)
+ament_target_dependencies(vio_ros2 rclcpp sensor_msgs cv_bridge message_filters)
+target_link_libraries(vio_ros2 ${THIRD_PARTY_LIBS})
+
+install(TARGETS
+    vio_ros2
+    DESTINATION lib/${PROJECT_NAME}
+)
 
 if(BUILD_TESTING)
   find_package(ament_lint_auto REQUIRED)
@@ -107,8 +119,5 @@ if(BUILD_TESTING)
   set(ament_cmake_cpplint_FOUND TRUE)
   ament_lint_auto_find_test_dependencies()
 endif()
-
-add_executable(vio_ros2 src/run_ros2.cpp)
-target_link_libraries(vio_ros2 ${THIRD_PARTY_LIBS})
 
 ament_package()

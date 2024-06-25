@@ -32,6 +32,9 @@ public:
    */
   bool Step();
 
+  bool Step(cv::Mat left_img, cv::Mat right_img, double resize_scale = 1);
+
+  void Shutdown();
   /**
    * @brief get frontend status
    * @return enum element FrontendStatus{GOOD, BAD, LOST, INITING}

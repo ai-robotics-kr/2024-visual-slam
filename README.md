@@ -41,3 +41,14 @@ make
 
 ### Reference
 [slambook2 : https://github.com/gaoxiang12/slambook2](https://github.com/gaoxiang12/slambook2)
+
+
+# ROS2 build
+export LD_LIBRARY_PATH=/2024-visual-slam/lib:$LD_LIBRARY_PATH
+
+restart bash
+
+cd /2024-visual-slam/app/ROS2
+colcon build
+. install/setup.bash
+ros2 run VIO vio_ros2
