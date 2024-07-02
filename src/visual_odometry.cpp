@@ -106,10 +106,6 @@ void VisualOdometry::Shutdown() {
 }
 
 bool VisualOdometry::Step(cv::Mat left_img, cv::Mat right_img, double resize_scale) {
-  std::cout << "left_img size : " << left_img.size() << std::endl;
-  std::cout << "right_img size : " << left_img.size() << std::endl;
-  std::cout << "resize_scale : " << resize_scale << std::endl;
-
   auto new_frame = Frame::CreateFrame();
   cv::Mat left_img_resized, right_img_resized;
   if (resize_scale != 1) {

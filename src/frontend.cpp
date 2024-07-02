@@ -255,7 +255,6 @@ int Frontend::TrackLastFrame() {
 }
 
 bool Frontend::StereoInit() {
-  std::cout << "StereoInit" << std::endl;
   DetectFeatures();
   int num_coor_features = FindFeaturesInRight();
   if (num_coor_features < num_features_init_) {
@@ -276,7 +275,6 @@ bool Frontend::StereoInit() {
 }
 
 int Frontend::DetectFeatures() {
-  std::cout << "DetectFeatures " << std::endl;
    if (current_frame_->left_img_.empty()) {
     std::cerr << "Error: current_frame_->left_img_ is empty!" << std::endl;
     return -1;
@@ -284,6 +282,7 @@ int Frontend::DetectFeatures() {
   
   if (current_frame_->left_img_.type() != CV_8UC1) {
     std::cerr << "Error: current_frame_->left_img_ is not of type CV_8UC1!" << std::endl;
+    std::cerr << "current_frame_->left_img_ type is "  << current_frame_->left_img_.type() << std::endl;
     return -1;
   }
   cv::Mat mask(current_frame_->left_img_.size(), CV_8UC1, 255);
@@ -293,13 +292,9 @@ int Frontend::DetectFeatures() {
   }
 
   std::vector<cv::KeyPoint> keypoints;
-  std::cout << "detect current_frame->left_img_" << std::endl;
-  std::cout << "left_img_ size : " << current_frame_->left_img_.size() << std::endl;
-  gftt_->detect(current_frame_->left_img_, keypoints, mask); // TODO 여기서 에러 발생
-  std::cout << "detected keypoints size : " << keypoints.size() << std::endl;
+  gftt_->detect(current_frame_->left_img_, keypoints, mask);
   int cnt_detected = 0;
   for (auto &kp : keypoints) {
-    std::cout << "current_frame_->features_left_.push_back" << std::endl;
     current_frame_->features_left_.push_back(
         Feature::Ptr(new Feature(current_frame_, kp)));
     cnt_detected++;
