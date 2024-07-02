@@ -26,21 +26,21 @@ display_cx : 512
 display_cy : 384
 
 # left camera intrinsics
-left_fx: 517.3
-left_fy: 516.5
-left_cx: 325.1
-left_cy: 249.7
-left_baseline: 0
+left_fx: 701.164
+left_fy: 701.59
+left_cx: 644.693
+left_cy: 373.125
+left_baseline: 59.4187
 left_x: 0
 left_y: 0
 left_z: 0
 
 # right camera intrinsics
-right_fx: 517.3
-right_fy: 516.5
-right_cx: 325.1
-right_cy: 249.7
-right_baseline: 0 
-right_x: 0
+right_fx: 700.971
+right_fy: 701.031
+right_cx: 641.818
+right_cy: 362.647
+right_baseline: 59.4187
+right_x: -0.000414808
 right_y: 0
-right_z: 0
+right_z: -0.000554809

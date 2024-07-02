@@ -6,8 +6,8 @@ using std::placeholders::_1;
 RgbdVioNode::RgbdVioNode()
 :   Node("VIO"), m_VIO(nullptr)
 {
-    rgb_sub = std::make_shared<message_filters::Subscriber<ImageMsg> >(this, "image_raw");
-    depth_sub = std::make_shared<message_filters::Subscriber<ImageMsg> >(this, "image_raw/right");
+    rgb_sub = std::make_shared<message_filters::Subscriber<ImageMsg> >(this, "/zed/zed_node/left/image_rect_color");
+    depth_sub = std::make_shared<message_filters::Subscriber<ImageMsg> >(this, "/zed/zed_node/right/image_rect_color");
 
     syncApproximate = std::make_shared<message_filters::Synchronizer<approximate_sync_policy> >(approximate_sync_policy(10), *rgb_sub, *depth_sub);
     syncApproximate->registerCallback(&RgbdVioNode::GrabRGBD, this);
