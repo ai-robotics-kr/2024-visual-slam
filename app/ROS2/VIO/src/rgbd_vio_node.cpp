@@ -3,20 +3,16 @@
 
 using std::placeholders::_1;
 
-RgbdVioNode::RgbdVioNode(VisualOdometry* vio)
-:   Node("VIO"),
-    m_VIO(vio)
+RgbdVioNode::RgbdVioNode()
+:   Node("VIO"), m_VIO(nullptr)
 {
-    m_VIO->Init();
-
-    rgb_sub = std::make_shared<message_filters::Subscriber<ImageMsg> >(std::shared_ptr<rclcpp::Node>(this), "image_raw");
-    depth_sub = std::make_shared<message_filters::Subscriber<ImageMsg> >(std::shared_ptr<rclcpp::Node>(this), "image_raw/right");
-
-    // rgb_sub = std::make_shared<message_filters::Subscriber<ImageMsg> >(std::shared_ptr<rclcpp::Node>(this), "left/image_raw_color");
-    // depth_sub = std::make_shared<message_filters::Subscriber<ImageMsg> >(std::shared_ptr<rclcpp::Node>(this), "right/image_raw_color");
+    rgb_sub = std::make_shared<message_filters::Subscriber<ImageMsg> >(this, "image_raw/right");
+    depth_sub = std::make_shared<message_filters::Subscriber<ImageMsg> >(this, "image_raw/right");
+    std::cout << "make image subscriber instance" << std::endl;
 
     syncApproximate = std::make_shared<message_filters::Synchronizer<approximate_sync_policy> >(approximate_sync_policy(10), *rgb_sub, *depth_sub);
     syncApproximate->registerCallback(&RgbdVioNode::GrabRGBD, this);
+    std::cout << "register callback" << std::endl;
 }
 
 RgbdVioNode::~RgbdVioNode()
@@ -51,6 +47,11 @@ void RgbdVioNode::GrabRGBD(const ImageMsg::SharedPtr msgRGB, const ImageMsg::Sha
         RCLCPP_ERROR(this->get_logger(), "cv_bridge exception: %s", e.what());
         return;
     }
-    
-    m_VIO->Step(cv_ptrRGB->image, cv_ptrD->image);
+    std::cout << "vio before step" << std::endl;
+    if (m_VIO) {
+        m_VIO->Step(cv_ptrRGB->image, cv_ptrD->image);
+    } else {
+        RCLCPP_ERROR(this->get_logger(), "VIO is not set");
+    }
+    std::cout << "vio after step" << std::endl;
 }

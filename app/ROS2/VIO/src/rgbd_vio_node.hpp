@@ -21,9 +21,13 @@
 class RgbdVioNode : public rclcpp::Node
 {
 public:
-    RgbdVioNode(VisualOdometry* vio);
+    RgbdVioNode();
 
     ~RgbdVioNode();
+
+    void setVIO(VisualOdometry* vio) {
+        m_VIO = vio;
+    }
 
 private: 
     using ImageMsg = sensor_msgs::msg::Image;

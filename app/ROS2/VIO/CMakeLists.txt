@@ -64,7 +64,7 @@ find_package(message_filters REQUIRED)
 find_package(cv_bridge REQUIRED)
 
 # libslam.so 파일이 있는 디렉토리 경로를 설정합니다.
-set(LIBSLAMSO /2024-visual-slam/lib/)
+set(LIBSLAMSO ${PROJECT_SOURCE_DIR}/../../../lib/)
 
 # libslam.so 파일을 찾습니다.
 find_library(SLAM_LIBRARY

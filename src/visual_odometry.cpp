@@ -10,8 +10,8 @@ bool VisualOdometry::Init() {
   // @TODO type casting bool type
   auto use_camera = Config::Get<int>("use_camera");
   if (use_camera) {
-    dataset_ = Dataset::Ptr(new Dataset());
-    
+    std::cout << "use_camera is true" << std::endl;
+
     Vec3 left_t;
     left_t << Config::Get<double>("left_x"), Config::Get<double>("left_y"), Config::Get<double>("left_z");
     Camera::Ptr left_camera(
@@ -48,8 +48,9 @@ bool VisualOdometry::Init() {
     backend_->SetCameras(left_camera, right_camera);
 
     viewer_->SetMap(map_);
+    std::cout << "VIO initialization success" << std::endl;
     return true;
-  } 
+  }
   else {
     dataset_ = Dataset::Ptr(new Dataset(Config::Get<std::string>("dataset_dir")));
     CHECK_EQ(dataset_->Init(), true);
@@ -105,7 +106,9 @@ void VisualOdometry::Shutdown() {
 }
 
 bool VisualOdometry::Step(cv::Mat left_img, cv::Mat right_img, double resize_scale) {
-  std::cout << " " << left_img.size() << std::endl;
+  std::cout << "left_img size : " << left_img.size() << std::endl;
+  std::cout << "right_img size : " << left_img.size() << std::endl;
+  std::cout << "resize_scale : " << resize_scale << std::endl;
 
   auto new_frame = Frame::CreateFrame();
   cv::Mat left_img_resized, right_img_resized;
@@ -120,8 +123,10 @@ bool VisualOdometry::Step(cv::Mat left_img, cv::Mat right_img, double resize_sca
     new_frame->left_img_ = left_img;
     new_frame->right_img_ = right_img;
   }
-  if (new_frame == nullptr)
+  if (new_frame == nullptr) {
+    std::cout << "new_frame is nullptr" << std::endl;
     return false;
+  }
 
   auto t1 = std::chrono::steady_clock::now();
   bool success = frontend_->AddFrame(new_frame);

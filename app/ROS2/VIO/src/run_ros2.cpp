@@ -9,9 +9,10 @@ int main(int argc, char **argv) {
   google::ParseCommandLineFlags(&argc, &argv, true);
 
   rclcpp::init(argc, argv);
-  auto vio = new  VisualOdometry(FLAGS_config_file_path);
-  
-  auto node = std::make_shared<RgbdVioNode>(vio);
+  auto vio = std::make_shared<VisualOdometry>(FLAGS_config_file_path);
+  vio->Init();
+  auto node = std::make_shared<RgbdVioNode>();
+  node->setVIO(vio.get());
   rclcpp::spin(node);
   
   rclcpp::shutdown();
