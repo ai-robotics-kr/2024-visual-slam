@@ -275,6 +275,16 @@ bool Frontend::StereoInit() {
 }
 
 int Frontend::DetectFeatures() {
+   if (current_frame_->left_img_.empty()) {
+    std::cerr << "Error: current_frame_->left_img_ is empty!" << std::endl;
+    return -1;
+  }
+  
+  if (current_frame_->left_img_.type() != CV_8UC1) {
+    std::cerr << "Error: current_frame_->left_img_ is not of type CV_8UC1!" << std::endl;
+    std::cerr << "current_frame_->left_img_ type is "  << current_frame_->left_img_.type() << std::endl;
+    return -1;
+  }
   cv::Mat mask(current_frame_->left_img_.size(), CV_8UC1, 255);
   for (auto &feat : current_frame_->features_left_) {
     cv::rectangle(mask, feat->keypoint_.pt - cv::Point2f(10, 10),

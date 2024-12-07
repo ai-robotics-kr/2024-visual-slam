@@ -16,6 +16,8 @@ public:
       : dataset_path_(dataset_path), calibration_path_(calibration_path),
         image_format_(image_format) {}
 
+  Dataset() {}
+
   /**
    * @brief init camera intrinsic and extrinsic parameter from config file
    * @return true if success initialization

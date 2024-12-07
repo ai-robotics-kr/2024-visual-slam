@@ -90,4 +90,4 @@ set(THIRD_PARTY_LIBS
 
 include_directories(${${PACKAGE_NAME}_INCLUDE_PATH})
 add_subdirectory(${${PACKAGE_NAME}_SOURCE_PATH})
-add_subdirectory(app)
+add_subdirectory(app/kitti)
